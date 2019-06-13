@@ -1,15 +1,15 @@
 
 <template>
   <div class="calendar">
-    <!-- <div class="wh_top_changge">
-        <li @click="PreMonth(myDate,false)">
-          <div class="wh_jiantou1">11</div>
-        </li>
-        <li class="wh_content_li">{{dateTop}}</li>
-        <li @click="NextMonth(myDate,false)">
-          <div class="wh_jiantou2">22</div>
-        </li>
-      </div> -->
+    <ul class="calendar-info">
+      <li @click="PreMonth(myDate,false)">
+        <div class="wh_jiantou1">11</div>
+      </li>
+      <li class="wh_content_li">{{dateTop}}</li>
+      <li @click="NextMonth(myDate,false)">
+        <div class="wh_jiantou2">22</div>
+      </li>
+    </ul>
 
     <div class="calendar-header">
       年-月-日
@@ -50,7 +50,10 @@
                 </template>
               </div>
               <!-- 额外数据 -->
-              <div class="calendar-content">
+              <div
+                class="calendar-content"
+                :style="{height:cellHeight}"
+              >
                 <slot
                   v-if="curNode(row,col).isWeek"
                   name="week"
@@ -78,20 +81,11 @@ export default {
       cols: [1, 2, 3, 4, 5, 6, 7, 8],
       myDate: [],
       list: [],
-      historyChose: [],
       dateTop: ''
     };
   },
 
   props: {
-    markDate: {
-      type: Array,
-      default: () => []
-    },
-    markDateMore: {
-      type: Array,
-      default: () => []
-    },
     columnheader: {
       type: Array,
       default: () => ['周数', '一', '二', '三', '四', '五', '六', '日']
@@ -100,13 +94,17 @@ export default {
       type: Boolean,
       default: () => false
     },
-    agoDayHide: {
+    cellHeight: {
       type: String,
-      default: `0`
+      default: '60px'
     },
-    futureDayHide: {
+    defaultDate: {
       type: String,
-      default: `2554387200`
+      default: ''
+    },
+    defaultSelected: {
+      type: Boolean,
+      default: () => true
     }
   },
   computed: {
@@ -121,29 +119,47 @@ export default {
   },
   created() {
     this.intStart();
-    this.myDate = new Date();
+    if (this.defaultDate) {
+      this.myDate = new Date(this.defaultDate);
+    } else {
+      this.myDate = new Date();
+    }
   },
   methods: {
-    // 去除索引数据
+    // 检索某行某列单元格日期
     curNode(row, col) {
+      // 数字8 是 cols.length
       const i = row * 8 + col - 1;
       if (this.list.length > 0) {
         return this.list[i];
-        x;
       }
       return {};
     },
+    // 每个单元格样式
     cellClassName(row, col) {
       let node = this.curNode(row, col);
+      const className = [];
       if (node.isWeek) {
-        return 'calendar-week-cell';
+        className.push('calendar-week-cell');
+        return className;
       } else {
         if (node.otherMonth === 'preMonth') {
-          return 'calendar-cell calendar-last-month-cell';
+          className.push('calendar-day-cell');
+          className.push('calendar-last-month-cell');
+          return className;
         } else if (node.otherMonth === 'nextMonth') {
-          return 'calendar-cell calendar-next-month-cell';
+          className.push('calendar-day-cell');
+          className.push('calendar-next-month-cell');
+          return className;
         }
-        return 'calendar-cell';
+        className.push('calendar-day-cell');
+        if (node.isToday) {
+          className.push('calendar-today');
+        }
+        if (node.chooseDay) {
+          className.push('calendar-selected');
+        }
+        return className;
       }
     },
     className(row, col) {
@@ -161,7 +177,7 @@ export default {
       return obj;
     },
     clickDay: function(item, index) {
-      if (item.otherMonth === 'nowMonth' && !item.dayHide) {
+      if (item.otherMonth === 'nowMonth') {
         this.getList(this.myDate, item.date);
       }
       if (item.otherMonth !== 'nowMonth') {
@@ -213,74 +229,29 @@ export default {
       return [markDate, markDateMore];
     },
     getList: function(date, chooseDay, isChosedDay = true) {
-      const [markDate, markDateMore] = this.forMatArgs();
       this.dateTop = `${date.getFullYear()}年${date.getMonth() + 1}月`;
       let arr = timeUtil.getMonthList(this.myDate);
-      console.log(arr);
+
       for (let i = 0; i < arr.length; i++) {
-        let markClassName = '';
         let k = arr[i];
-        k.chooseDay = false;
-        const nowTime = k.date;
-        const t = new Date(nowTime).getTime() / 1000;
-        //看每一天的class
-        for (const c of markDateMore) {
-          if (c.date === nowTime) {
-            markClassName = c.className || '';
+        if (k.isDay && k.otherMonth === 'nowMonth') {
+          k.chooseDay = false;
+          if (chooseDay === k.date) {
+            k.chooseDay = true;
           }
-        }
-        //标记选中某些天 设置class
-        k.markClassName = markClassName;
-        k.isMark = markDate.indexOf(nowTime) > -1;
-        //无法选中某天
-        k.dayHide = t < this.agoDayHide || t > this.futureDayHide;
-        if (k.isToday) {
-          this.$emit('isToday', nowTime);
-        }
-        let flag = !k.dayHide && k.otherMonth === 'nowMonth';
-        if (chooseDay && chooseDay === nowTime && flag) {
-          this.$emit('choseDay', nowTime);
-          this.historyChose.push(nowTime);
-          k.chooseDay = true;
-        } else if (
-          this.historyChose[this.historyChose.length - 1] === nowTime &&
-          !chooseDay &&
-          flag
-        ) {
-          k.chooseDay = true;
         }
       }
       this.list = arr;
     }
   },
   mounted() {
-    this.getList(this.myDate);
+    if (this.defaultDate) {
+      this.getList(this.myDate, timeUtil.dateFormat(this.defaultDate));
+    } else {
+      this.getList(this.myDate, timeUtil.dateFormat(new Date()));
+    }
   },
   watch: {
-    markDate: {
-      handler(val, oldVal) {
-        this.getList(this.myDate);
-      },
-      deep: true
-    },
-    markDateMore: {
-      handler(val, oldVal) {
-        this.getList(this.myDate);
-      },
-      deep: true
-    },
-    agoDayHide: {
-      handler(val, oldVal) {
-        this.getList(this.myDate);
-      },
-      deep: true
-    },
-    futureDayHide: {
-      handler(val, oldVal) {
-        this.getList(this.myDate);
-      },
-      deep: true
-    },
     sundayStart: {
       handler(val, oldVal) {
         this.intStart();
@@ -303,6 +274,29 @@ export default {
 .calendar {
   width: 100%;
   margin: auto;
+  background: #fff;
+}
+.calendar-info {
+  display: flex;
+}
+.calendar-info li {
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+.wh_jiantou1 {
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  transform: rotate(-45deg);
+}
+
+.calendar-info .wh_content_li {
+  cursor: auto;
+  flex: 2.5;
 }
 
 .calendar-table {
@@ -321,25 +315,30 @@ export default {
 .calendar-column-header-inner {
   font-weight: normal;
 }
-.calendar-cell {
+.calendar-day-cell {
   color: rgba(0, 0, 0, 0.65);
 }
-.calendar-cell.calendar-last-month-cell,
-.calendar-cell.calendar-next-month-cell {
+.calendar-day-cell.calendar-today .calendar-date {
+  border-top-color: #1890ff;
+}
+
+.calendar-day-cell.calendar-selected .calendar-date {
+  background: #e6f7ff;
+}
+
+.calendar-day-cell.calendar-last-month-cell,
+.calendar-day-cell.calendar-next-month-cell {
   color: rgba(0, 0, 0, 0.25);
 }
 .calendar-date {
   text-align: left;
   margin: 0 4px;
   display: block;
-
-  height: 116px;
   padding: 4px 8px;
   border-top: 2px solid #e8e8e8;
   border-top-width: 2px;
   border-top-style: solid;
   border-top-color: rgb(232, 232, 232);
-  transition: background 0.3s;
 }
 
 .today .calendar-date {
@@ -360,7 +359,6 @@ export default {
   text-align: right;
 }
 .calendar-content {
-  height: 88px;
   overflow-y: auto;
   width: auto;
   left: auto;

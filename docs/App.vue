@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <Calendar>
+  <div class="demo">
+    <Calendar defaultDate1="2019-05-06">
       <template #week="date">
         {{date.weekNum}}周数据
       </template>
       <template #day="date">
-        {{date.id}}号数据
+        {{date.chooseDay}}
       </template>
     </Calendar>
   </div>
@@ -22,3 +22,9 @@ export default {
   }
 };
 </script>
+<style>
+.demo {
+  padding: 50px;
+  background: green;
+}
+</style>
