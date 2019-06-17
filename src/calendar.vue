@@ -1,19 +1,41 @@
 
 <template>
   <div class="calendar">
+
+    <div class="calendar-header">
+      <a-select
+        :defaultValue="curYear"
+        style="width:120px;"
+      >
+        <a-select-option
+          v-for="(value,index) in yearOptions"
+          :key="index"
+          :value="value"
+        >{{value}}年</a-select-option>
+      </a-select>
+      <a-select :defaultValue="curMonth">
+        <a-select-option
+          v-for="(value,index) in monthOptions"
+          :key="index"
+          :value="value"
+        >{{value}}月</a-select-option>
+      </a-select>
+    </div>
+
     <ul class="calendar-info">
       <li @click="PreMonth(myDate,false)">
-        <div class="wh_jiantou1">11</div>
+        <div class="calendar_icon_left">
+          <a-icon type="left" />
+        </div>
+
       </li>
       <li class="wh_content_li">{{dateTop}}</li>
       <li @click="NextMonth(myDate,false)">
-        <div class="wh_jiantou2">22</div>
+        <div class="calendar_icon_right">
+          <a-icon type="right" />
+        </div>
       </li>
     </ul>
-
-    <div class="calendar-header">
-      年-月-日
-    </div>
 
     <table class="calendar-table">
       <thead>
@@ -74,17 +96,27 @@
 </template>
 <script>
 /* eslint-disable */
+import { Icon, Select } from 'ant-design-vue';
+import 'ant-design-vue/lib/select/style/css';
 import timeUtil from './calendar';
+
 export default {
   data() {
     return {
       cols: [1, 2, 3, 4, 5, 6, 7, 8],
       myDate: [],
       list: [],
-      dateTop: ''
+      monthOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      dateTop: '',
+      curYear: 0,
+      curMonth: 0
     };
   },
-
+  components: {
+    AIcon: Icon,
+    ASelect: Select,
+    ASelectOption: Select.Option
+  },
   props: {
     columnheader: {
       type: Array,
@@ -115,6 +147,27 @@ export default {
         arr.push(i);
       }
       return arr;
+    },
+    yearOptions() {
+      let nowDate;
+      if (this.defaultDate) {
+        nowDate = new Date(this.defaultDate);
+      } else {
+        nowDate = new Date();
+      }
+      const year = nowDate.getFullYear();
+      const month = nowDate.getMonth() + 1;
+
+      this.curYear = year;
+      this.curMonth = month;
+
+      const options = [];
+      let i = year - 11;
+      while (i < year + 9) {
+        i++;
+        options.push(i);
+      }
+      return options;
     }
   },
   created() {
@@ -229,6 +282,8 @@ export default {
       return [markDate, markDateMore];
     },
     getList: function(date, chooseDay, isChosedDay = true) {
+      this.curYear = date.getFullYear();
+      this.curMonth = date.getMonth() + 1;
       this.dateTop = `${date.getFullYear()}年${date.getMonth() + 1}月`;
       let arr = timeUtil.getMonthList(this.myDate);
 
@@ -276,6 +331,11 @@ export default {
   margin: auto;
   background: #fff;
 }
+
+.calendar-header {
+  padding: 11px 16px 11px 0;
+  text-align: right;
+}
 .calendar-info {
   display: flex;
 }
@@ -286,12 +346,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.wh_jiantou1 {
-  width: 12px;
-  height: 12px;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  transform: rotate(-45deg);
+.calendar_icon_left {
+}
+.calendar_icon_rigth {
 }
 
 .calendar-info .wh_content_li {
@@ -305,7 +362,6 @@ export default {
   max-width: 100%;
   background-color: transparent;
   width: 100%;
-  height: 256px;
 }
 .calendar-column-header {
   text-align: right;
