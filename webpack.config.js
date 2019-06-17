@@ -23,9 +23,7 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
-            less: 'vue-style-loader!css-loader!less-loader',
-            scss: 'vue-style-loader!css-loader!sass-loader',
-            sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+            less: 'vue-style-loader!css-loader!less-loader'
           }
         }
       },
