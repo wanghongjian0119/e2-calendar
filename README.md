@@ -3,7 +3,7 @@
 > 日历
 
 <div style="text-align:center">
-  <img src="src/assets/vue.png" alt="vue" title="vue"/>
+  <img src="preview.png" alt="calendar" title="calendar"/>
 </div>
 
 ### Development Setup
