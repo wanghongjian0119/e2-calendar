@@ -1,4 +1,7 @@
 /* eslint-disable */
+/**
+ * 日历面板计算核心函数
+ */
 export default {
   // 当某月的天数
   getDaysInOneMonth(date) {
@@ -117,18 +120,10 @@ export default {
     return arr;
   },
 
+  /**
+   * 计算日期是在当前年中那一周
+   */
   getYearWeek(dateStr) {
-    // const today = new Date(dateStr);
-    // let firstDay = new Date(today.getFullYear(), 0, 1);
-    // const dayOfWeek = firstDay.getDay();
-    // let spendDay = 1;
-    // if (dayOfWeek != 0) {
-    //   spendDay = 7 - dayOfWeek + 1;
-    // }
-    // firstDay = new Date(today.getFullYear(), 0, 1 + spendDay);
-    // const d = Math.round((today.valueOf() - firstDay.valueOf()) / 86400000);
-    // return Math.ceil((d + firstDay.getDay()) / 7);
-
     const thisDay = new Date(dateStr);
     const firstDay = new Date(thisDay.getFullYear(), 0, 1); //本年的第一天,Js月份从0开始记！0就是1月啦。
     let dayWeek = thisDay.getDay(); //今天周几
@@ -158,9 +153,10 @@ export default {
     monthWeeks.push(week + 3);
     monthWeeks.push(week + 4);
     monthWeeks.push(week + 5);
-
+    //日历天面板数据
     const days = [...this.getLeftArr(date), ...this.getMonthListNoOther(date), ...this.getRightArr(date)];
     const { length } = days;
+    // 包含周的日历面板
     const weekDays = [];
     let k = 0;
     for (let i = 0; i < length; i += 1) {

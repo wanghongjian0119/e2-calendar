@@ -146,7 +146,7 @@ export default {
     },
     cellHeight: {
       type: String,
-      default: '60px'
+      default: '44px'
     },
     defaultDate: {
       type: String,

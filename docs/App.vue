@@ -41,10 +41,10 @@ export default {
 }
 
 .demo-week {
-  line-height: 50px;
+  line-height: 40px;
 }
 .demo-day {
-  line-height: 50px;
+  line-height: 40px;
 }
 .demo-day em {
   width: 12px;
