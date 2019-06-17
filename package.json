@@ -1,5 +1,5 @@
 {
-  "name": "e2-calendar",
+  "name": "@e2/calendar",
   "version": "0.0.1",
   "description": "日历",
   "main": "dist/e2-calendar.min.js",
