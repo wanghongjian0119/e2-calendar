@@ -15,7 +15,7 @@ export default {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const dateFirstOne = new Date(year + '/' + month + '/1');
-    return this.sundayStart ? (dateFirstOne.getDay() == 0 ? 7 : dateFirstOne.getDay()) : dateFirstOne.getDay() == 0 ? 6 : dateFirstOne.getDay() - 1;
+    return this.sundayStart ? (dateFirstOne.getDay() === 0 ? 7 : dateFirstOne.getDay()) : dateFirstOne.getDay() === 0 ? 6 : dateFirstOne.getDay() - 1;
   },
   /**
    * 获取当前日期上个月或者下个月
@@ -29,13 +29,13 @@ export default {
     let month2;
     if (str === 'nextMonth') {
       month2 = parseInt(month) + 1;
-      if (month2 == 13) {
+      if (month2 === 13) {
         year2 = parseInt(year2) + 1;
         month2 = 1;
       }
     } else {
       month2 = parseInt(month) - 1;
-      if (month2 == 0) {
+      if (month2 === 0) {
         year2 = parseInt(year2) - 1;
         month2 = 12;
       }
@@ -125,13 +125,13 @@ export default {
    */
   getYearWeek(dateStr) {
     const thisDay = new Date(dateStr);
-    const firstDay = new Date(thisDay.getFullYear(), 0, 1); //本年的第一天,Js月份从0开始记！0就是1月啦。
-    let dayWeek = thisDay.getDay(); //今天周几
-    if (dayWeek == 0) {
+    const firstDay = new Date(thisDay.getFullYear(), 0, 1); // 本年的第一天,Js月份从0开始记！0就是1月啦。
+    let dayWeek = thisDay.getDay(); // 今天周几
+    if (dayWeek === 0) {
       dayWeek = 7;
     }
-    let startWeek = firstDay.getDay(); //本年第一天周几
-    if (startWeek == 0) {
+    let startWeek = firstDay.getDay(); // 本年第一天周几
+    if (startWeek === 0) {
       startWeek = 7;
     }
     const weekNum = ((thisDay.getTime() - firstDay.getTime()) / 86400000 + startWeek - dayWeek) / 7 + 1;
@@ -153,7 +153,7 @@ export default {
     monthWeeks.push(week + 3);
     monthWeeks.push(week + 4);
     monthWeeks.push(week + 5);
-    //日历天面板数据
+    // 日历天面板数据
     const days = [...this.getLeftArr(date), ...this.getMonthListNoOther(date), ...this.getRightArr(date)];
     const { length } = days;
     // 包含周的日历面板
