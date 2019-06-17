@@ -61,6 +61,8 @@ export default {
     for (let i = 0; i < leftNum; i++) {
       const nowTime = preDate.getFullYear() + '/' + (preDate.getMonth() + 1) + '/' + (num + i);
       arr.push({
+        year: preDate.getFullYear(),
+        month: preDate.getMonth() + 1,
         dayNum: num + i,
         date: nowTime,
         isToday: false,
@@ -78,6 +80,8 @@ export default {
     for (let i = 0; i < _length; i++) {
       const nowTime = nextDate.getFullYear() + '/' + (nextDate.getMonth() + 1) + '/' + (i + 1);
       arr.push({
+        year: nextDate.getFullYear(),
+        month: nextDate.getMonth() + 1,
         dayNum: i + 1,
         date: nowTime,
         isToday: false,
@@ -102,6 +106,8 @@ export default {
     for (let i = 0; i < num; i++) {
       const nowTime = year + '/' + month + '/' + (i + 1);
       arr.push({
+        year: year,
+        month: month,
         dayNum: i + 1,
         date: nowTime,
         isToday: toDay === nowTime,

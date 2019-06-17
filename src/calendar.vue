@@ -29,7 +29,7 @@
     <!-- end: 日历头部 -->
 
     <!-- begin: 日历当前信息 -->
-    <ul class="calendar-info">
+    <!-- <ul class="calendar-info">
       <li @click="PreMonth(myDate,false)">
         <div class="calendar_icon_left">
           <a-icon type="left" />
@@ -42,7 +42,7 @@
           <a-icon type="right" />
         </div>
       </li>
-    </ul>
+    </ul> -->
     <!-- end: 日历当前信息 -->
 
     <!-- begin: 日历单元格 -->
@@ -65,6 +65,7 @@
             v-for="(col,cx) in cols"
             :key="cx"
             :class="cellClassName(row,col)"
+            :title="cellTitle(row,col)"
           >
             <div
               class="calendar-date"
@@ -206,6 +207,13 @@ export default {
       }
       return {};
     },
+    cellTitle(row, col) {
+      let node = this.curNode(row, col);
+      if (node.isWeek) {
+        return `${node.year}年 第${node.weekNum}周`;
+      }
+      return `${node.year}年${node.month}月${node.dayNum}日`;
+    },
     // 每个单元格样式
     cellClassName(row, col) {
       let node = this.curNode(row, col);
@@ -240,6 +248,9 @@ export default {
     },
 
     clickDay: function(item, index) {
+      if (item.isWeek) {
+        return;
+      }
       if (item.otherMonth === 'nowMonth') {
         this.getList(this.myDate, item.date);
       }
@@ -383,6 +394,10 @@ export default {
 
 .calendar-day-cell.calendar-selected .calendar-date {
   background: #e6f7ff;
+}
+
+.calendar-day-cell.calendar-selected .calendar-date .calendar-value {
+  color: #1890ff;
 }
 
 .calendar-day-cell.calendar-last-month-cell,
