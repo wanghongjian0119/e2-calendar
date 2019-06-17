@@ -3,6 +3,9 @@
   <div class="calendar">
     <!-- begin: 日历头部 -->
     <div class="calendar-header">
+      <div class="calendar-header-ext">
+        <slot name="headerExt" />
+      </div>
       <a-select
         :value="curYear"
         @change="handleChangeYear"
@@ -74,7 +77,7 @@
               <!-- being: 日期数据 -->
               <div class="calendar-value">
                 <template v-if="curNode(row,col).isWeek">
-                  {{curNode(row,col).weekNum}}
+                  {{formatWeek(curNode(row,col).weekNum)}}
                 </template>
                 <template v-else>
                   {{curNode(row,col).dayNum}}
@@ -112,6 +115,7 @@
 import { Icon, Select } from 'ant-design-vue';
 import 'ant-design-vue/lib/select/style/css';
 import timeUtil from './calendar';
+import { returnStatement } from 'babel-types';
 
 export default {
   data() {
@@ -147,6 +151,13 @@ export default {
     defaultDate: {
       type: String,
       default: ''
+    },
+    // 格式化周显示格式
+    formatWeek: {
+      type: Function,
+      default: weekNum => {
+        return `第${weekNum}周`;
+      }
     }
   },
   computed: {
@@ -154,7 +165,7 @@ export default {
     rows() {
       let len = this.list.length / 8;
       let arr = [];
-      for (let i = 0; i < len; i++) {
+      for (let i = 0; i < len; i += 1) {
         arr.push(i);
       }
       return arr;
@@ -181,7 +192,7 @@ export default {
       const options = [];
       let i = year - 11;
       while (i < year + 9) {
-        i++;
+        i += 1;
         options.push(i);
       }
       return options;
@@ -297,7 +308,7 @@ export default {
       this.dateTop = `${date.getFullYear()}年${date.getMonth() + 1}月`;
       let arr = timeUtil.getMonthList(this.myDate);
 
-      for (let i = 0; i < arr.length; i++) {
+      for (let i = 0; i < arr.length; i += 1) {
         let k = arr[i];
         if (k.isDay && k.otherMonth === 'nowMonth') {
           k.chooseDay = false;
@@ -343,12 +354,18 @@ export default {
 }
 
 .calendar-header {
-  padding: 11px 16px 11px 0;
+  padding: 11px 0 11px 0;
   text-align: right;
 }
-.calendar-year-select {
+.calendar-header-ext {
+  float: left;
 }
-.calendar-mpnth-select {
+.calendar-month-select {
+  margin-left: 10px;
+}
+
+/* 
+.calendar-year-select {
 }
 .calendar-info {
   display: flex;
@@ -363,12 +380,12 @@ export default {
 .calendar_icon_left {
 }
 .calendar_icon_rigth {
-}
+} 
 
 .calendar-info .wh_content_li {
   cursor: auto;
   flex: 2.5;
-}
+} */
 
 .calendar-table {
   table-layout: fixed;
@@ -382,11 +399,14 @@ export default {
   padding-right: 12px;
   padding-bottom: 5px;
 }
+.calendar-column-header:first-child {
+  text-align: center;
+}
 .calendar-column-header-inner {
   font-weight: normal;
 }
 .calendar-day-cell {
-  color: rgba(0, 0, 0, 0.65);
+  color: #222;
 }
 .calendar-day-cell.calendar-today .calendar-date {
   border-top-color: #1890ff;
@@ -396,7 +416,7 @@ export default {
   background: #e6f7ff;
 }
 
-.calendar-day-cell.calendar-selected .calendar-date .calendar-value {
+.calendar-day-cell.calendar-selected .calendar-value {
   color: #1890ff;
 }
 
@@ -405,14 +425,6 @@ export default {
   color: rgba(0, 0, 0, 0.25);
 }
 .calendar-date {
-  text-align: left;
-  margin: 0 4px;
-  display: block;
-  padding: 4px 8px;
-  border-top: 2px solid #e8e8e8;
-  border-top-width: 2px;
-  border-top-style: solid;
-  border-top-color: rgb(232, 232, 232);
 }
 
 .today .calendar-date {
@@ -422,20 +434,60 @@ export default {
   background: #e6f7ff;
   cursor: pointer;
 }
-.week-cell {
-  background: #03a9f4;
+.calendar-week-cell {
+  background: #e3f2ff;
+  padding: 0;
 }
 .calendar-week-cell .calendar-date {
-  background: #03a9f4;
+  text-align: left;
+  display: block;
+  border-top: 2px solid #d9d9d9;
 }
 
-.calendar-value {
+.calendar-week-cell .calendar-value {
+  text-align: center;
+  height: 30px;
+  line-height: 42px;
+}
+.calendar-week-cell .calendar-content {
+  text-align: center;
+}
+
+.calendar-week-cell,
+.calendar-day-cell {
+  vertical-align: top;
+}
+.calendar-day-cell .calendar-date {
+  text-align: left;
+  margin: -1px 4px 0 4px;
+  display: block;
+  padding: 4px 8px;
+  border-top: 2px solid #d9d9d9;
+}
+
+.calendar-day-cell .calendar-value {
+  text-align: right;
+  height: 30px;
+  line-height: 42px;
+}
+
+.calendar-day-cell .calendar-content {
   text-align: right;
 }
+
 .calendar-content {
   overflow-y: auto;
   width: auto;
   left: auto;
   bottom: auto;
+  color: #3272d3;
+}
+</style>
+
+<style lang="less" scoped>
+.aa {
+  .bb {
+    color: red;
+  }
 }
 </style>

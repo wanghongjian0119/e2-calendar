@@ -58,7 +58,7 @@ export default {
     const num = this.getDaysInOneMonth(this.getOtherMonth(date, 'preMonth')) - leftNum + 1;
     const preDate = this.getOtherMonth(date, 'preMonth');
     // 上个月多少开始
-    for (let i = 0; i < leftNum; i++) {
+    for (let i = 0; i < leftNum; i += 1) {
       const nowTime = preDate.getFullYear() + '/' + (preDate.getMonth() + 1) + '/' + (num + i);
       arr.push({
         year: preDate.getFullYear(),
@@ -77,7 +77,7 @@ export default {
     const nextDate = this.getOtherMonth(date, 'nextMonth');
     const leftLength = this.getDaysInOneMonth(date) + this.getMonthweek(date);
     const _length = 7 - (leftLength % 7);
-    for (let i = 0; i < _length; i++) {
+    for (let i = 0; i < _length; i += 1) {
       const nowTime = nextDate.getFullYear() + '/' + (nextDate.getMonth() + 1) + '/' + (i + 1);
       arr.push({
         year: nextDate.getFullYear(),
@@ -103,7 +103,7 @@ export default {
     const month = date.getMonth() + 1;
     const toDay = this.dateFormat(new Date());
 
-    for (let i = 0; i < num; i++) {
+    for (let i = 0; i < num; i += 1) {
       const nowTime = year + '/' + month + '/' + (i + 1);
       arr.push({
         year: year,
