@@ -339,14 +339,7 @@ export default {
 };
 </script>
 
-<style scoped>
-/* @media screen and (min-width: 460px) {
-  .wh_item_date:hover {
-    background: #fff;
-    cursor: pointer;
-  }
-} */
-
+<style lang="less" scoped>
 .calendar {
   width: 100%;
   margin: auto;
@@ -363,30 +356,6 @@ export default {
 .calendar-month-select {
   margin-left: 10px;
 }
-
-/* 
-.calendar-year-select {
-}
-.calendar-info {
-  display: flex;
-}
-.calendar-info li {
-  cursor: pointer;
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-}
-.calendar_icon_left {
-}
-.calendar_icon_rigth {
-} 
-
-.calendar-info .wh_content_li {
-  cursor: auto;
-  flex: 2.5;
-} */
-
 .calendar-table {
   table-layout: fixed;
   border-collapse: collapse;
@@ -398,33 +367,52 @@ export default {
   text-align: right;
   padding-right: 12px;
   padding-bottom: 5px;
+  &:first-child {
+    text-align: center;
+  }
 }
-.calendar-column-header:first-child {
-  text-align: center;
-}
+
 .calendar-column-header-inner {
   font-weight: normal;
 }
+
 .calendar-day-cell {
   color: #222;
-}
-.calendar-day-cell.calendar-today .calendar-date {
-  border-top-color: #1890ff;
-}
+  &.calendar-today {
+    .calendar-date {
+      border-top-color: #1890ff;
+    }
+  }
+  &.calendar-selected {
+    .calendar-date {
+      background: #e6f7ff;
+    }
+    .calendar-value {
+      color: #1890ff;
+    }
+  }
+  &.calendar-last-month-cell {
+    color: rgba(0, 0, 0, 0.25);
+  }
+  &.calendar-next-month-cell {
+    color: rgba(0, 0, 0, 0.25);
+  }
 
-.calendar-day-cell.calendar-selected .calendar-date {
-  background: #e6f7ff;
-}
-
-.calendar-day-cell.calendar-selected .calendar-value {
-  color: #1890ff;
-}
-
-.calendar-day-cell.calendar-last-month-cell,
-.calendar-day-cell.calendar-next-month-cell {
-  color: rgba(0, 0, 0, 0.25);
-}
-.calendar-date {
+  .calendar-date {
+    text-align: left;
+    margin: -1px 4px 0 4px;
+    display: block;
+    padding: 4px 8px;
+    border-top: 2px solid #d9d9d9;
+  }
+  .calendar-value {
+    text-align: right;
+    height: 30px;
+    line-height: 42px;
+  }
+  .calendar-content {
+    text-align: right;
+  }
 }
 
 .today .calendar-date {
@@ -434,45 +422,28 @@ export default {
   background: #e6f7ff;
   cursor: pointer;
 }
-.calendar-week-cell {
-  background: #e3f2ff;
-  padding: 0;
-}
-.calendar-week-cell .calendar-date {
-  text-align: left;
-  display: block;
-  border-top: 2px solid #d9d9d9;
-}
-
-.calendar-week-cell .calendar-value {
-  text-align: center;
-  height: 30px;
-  line-height: 42px;
-}
-.calendar-week-cell .calendar-content {
-  text-align: center;
-}
 
 .calendar-week-cell,
 .calendar-day-cell {
   vertical-align: top;
 }
-.calendar-day-cell .calendar-date {
-  text-align: left;
-  margin: -1px 4px 0 4px;
-  display: block;
-  padding: 4px 8px;
-  border-top: 2px solid #d9d9d9;
-}
 
-.calendar-day-cell .calendar-value {
-  text-align: right;
-  height: 30px;
-  line-height: 42px;
-}
-
-.calendar-day-cell .calendar-content {
-  text-align: right;
+.calendar-week-cell {
+  background: #e3f2ff;
+  padding: 0;
+  .calendar-date {
+    text-align: left;
+    display: block;
+    border-top: 2px solid #d9d9d9;
+  }
+  .calendar-value {
+    text-align: center;
+    height: 30px;
+    line-height: 42px;
+  }
+  .calendar-content {
+    text-align: center;
+  }
 }
 
 .calendar-content {
@@ -481,13 +452,5 @@ export default {
   left: auto;
   bottom: auto;
   color: #3272d3;
-}
-</style>
-
-<style lang="less" scoped>
-.aa {
-  .bb {
-    color: red;
-  }
 }
 </style>
