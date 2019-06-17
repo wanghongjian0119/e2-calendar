@@ -2,10 +2,10 @@
   <div class="demo">
     <Calendar defaultDate1="2019-05-06">
       <template #week="date">
-        {{date.weekNum}}周数据
+        {{date.year}}-{{date.weekNum}}周数据
       </template>
       <template #day="date">
-        {{date.chooseDay}}
+        {{date.dayNum}}号数据
       </template>
     </Calendar>
   </div>

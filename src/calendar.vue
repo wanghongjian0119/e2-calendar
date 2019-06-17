@@ -1,11 +1,12 @@
 
 <template>
   <div class="calendar">
-
+    <!-- begin: 日历头部 -->
     <div class="calendar-header">
       <a-select
-        :defaultValue="curYear"
-        style="width:120px;"
+        :value="curYear"
+        @change="handleChangeYear"
+        class="calendar-year-select"
       >
         <a-select-option
           v-for="(value,index) in yearOptions"
@@ -13,7 +14,11 @@
           :value="value"
         >{{value}}年</a-select-option>
       </a-select>
-      <a-select :defaultValue="curMonth">
+      <a-select
+        :value="curMonth"
+        @change="handleChangeMonth"
+        class="calendar-month-select"
+      >
         <a-select-option
           v-for="(value,index) in monthOptions"
           :key="index"
@@ -21,7 +26,9 @@
         >{{value}}月</a-select-option>
       </a-select>
     </div>
+    <!-- end: 日历头部 -->
 
+    <!-- begin: 日历当前信息 -->
     <ul class="calendar-info">
       <li @click="PreMonth(myDate,false)">
         <div class="calendar_icon_left">
@@ -36,7 +43,9 @@
         </div>
       </li>
     </ul>
+    <!-- end: 日历当前信息 -->
 
+    <!-- begin: 日历单元格 -->
     <table class="calendar-table">
       <thead>
         <tr>
@@ -57,25 +66,26 @@
             :key="cx"
             :class="cellClassName(row,col)"
           >
-
             <div
               class="calendar-date"
               @click="clickDay(curNode(row,col))"
             >
-              <!-- 日期数据 -->
+              <!-- being: 日期数据 -->
               <div class="calendar-value">
                 <template v-if="curNode(row,col).isWeek">
                   {{curNode(row,col).weekNum}}
                 </template>
                 <template v-else>
-                  {{curNode(row,col).id}}
+                  {{curNode(row,col).dayNum}}
                 </template>
               </div>
-              <!-- 额外数据 -->
+              <!-- end: 日期数据 -->
+              <!-- being: 额外数据 -->
               <div
                 class="calendar-content"
                 :style="{height:cellHeight}"
               >
+                <!-- 插槽: 周单元格和日单元格，并且对外提供当前节点 -->
                 <slot
                   v-if="curNode(row,col).isWeek"
                   name="week"
@@ -87,11 +97,13 @@
                   v-bind="curNode(row,col)"
                 />
               </div>
+              <!-- end: 额外数据 -->
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+    <!-- end: 日历单元格 -->
   </div>
 </template>
 <script>
@@ -103,13 +115,14 @@ import timeUtil from './calendar';
 export default {
   data() {
     return {
-      cols: [1, 2, 3, 4, 5, 6, 7, 8],
+      cols: [1, 2, 3, 4, 5, 6, 7, 8], // 日历列
       myDate: [],
       list: [],
       monthOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      yearOptions: [], //月下拉框
       dateTop: '',
-      curYear: 0,
-      curMonth: 0
+      curYear: 0, // 下拉框选择的年
+      curMonth: 0 // 下拉框选择的月
     };
   },
   components: {
@@ -133,13 +146,10 @@ export default {
     defaultDate: {
       type: String,
       default: ''
-    },
-    defaultSelected: {
-      type: Boolean,
-      default: () => true
     }
   },
   computed: {
+    // 日历行
     rows() {
       let len = this.list.length / 8;
       let arr = [];
@@ -147,27 +157,6 @@ export default {
         arr.push(i);
       }
       return arr;
-    },
-    yearOptions() {
-      let nowDate;
-      if (this.defaultDate) {
-        nowDate = new Date(this.defaultDate);
-      } else {
-        nowDate = new Date();
-      }
-      const year = nowDate.getFullYear();
-      const month = nowDate.getMonth() + 1;
-
-      this.curYear = year;
-      this.curMonth = month;
-
-      const options = [];
-      let i = year - 11;
-      while (i < year + 9) {
-        i++;
-        options.push(i);
-      }
-      return options;
     }
   },
   created() {
@@ -179,6 +168,35 @@ export default {
     }
   },
   methods: {
+    // 计算年数组
+    calYearOptions() {
+      let nowDate;
+      if (this.defaultDate) {
+        nowDate = new Date(this.defaultDate);
+      } else {
+        nowDate = new Date();
+      }
+      const year = nowDate.getFullYear();
+      const options = [];
+      let i = year - 11;
+      while (i < year + 9) {
+        i++;
+        options.push(i);
+      }
+      return options;
+    },
+    // 响应年下拉框
+    handleChangeYear(value) {
+      const date = `${value}/${this.curMonth}/1`;
+      this.myDate = new Date(date);
+      this.getList(this.myDate);
+    },
+    // 响应月下拉框
+    handleChangeMonth(value) {
+      const date = `${this.curYear}/${value}/1`;
+      this.myDate = new Date(date);
+      this.getList(this.myDate);
+    },
     // 检索某行某列单元格日期
     curNode(row, col) {
       // 数字8 是 cols.length
@@ -215,20 +233,12 @@ export default {
         return className;
       }
     },
-    className(row, col) {
-      if (this.curNode(row, col).isWeek) {
-        return 'week-cell';
-      }
-      return 'day-cell';
-    },
+
     intStart() {
       timeUtil.sundayStart = this.sundayStart;
+      this.yearOptions = this.calYearOptions();
     },
-    setClass(data) {
-      let obj = {};
-      obj[data.markClassName] = data.markClassName;
-      return obj;
-    },
+
     clickDay: function(item, index) {
       if (item.otherMonth === 'nowMonth') {
         this.getList(this.myDate, item.date);
@@ -269,18 +279,7 @@ export default {
         this.getList(this.myDate);
       }
     },
-    forMatArgs: function() {
-      let markDate = this.markDate;
-      let markDateMore = this.markDateMore;
-      markDate = markDate.map(k => {
-        return timeUtil.dateFormat(k);
-      });
-      markDateMore = markDateMore.map(k => {
-        k.date = timeUtil.dateFormat(k.date);
-        return k;
-      });
-      return [markDate, markDateMore];
-    },
+
     getList: function(date, chooseDay, isChosedDay = true) {
       this.curYear = date.getFullYear();
       this.curMonth = date.getMonth() + 1;
@@ -335,6 +334,10 @@ export default {
 .calendar-header {
   padding: 11px 16px 11px 0;
   text-align: right;
+}
+.calendar-year-select {
+}
+.calendar-mpnth-select {
 }
 .calendar-info {
   display: flex;

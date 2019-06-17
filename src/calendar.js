@@ -61,7 +61,7 @@ export default {
     for (let i = 0; i < leftNum; i++) {
       const nowTime = preDate.getFullYear() + '/' + (preDate.getMonth() + 1) + '/' + (num + i);
       arr.push({
-        id: num + i,
+        dayNum: num + i,
         date: nowTime,
         isToday: false,
         otherMonth: 'preMonth',
@@ -78,7 +78,7 @@ export default {
     for (let i = 0; i < _length; i++) {
       const nowTime = nextDate.getFullYear() + '/' + (nextDate.getMonth() + 1) + '/' + (i + 1);
       arr.push({
-        id: i + 1,
+        dayNum: i + 1,
         date: nowTime,
         isToday: false,
         otherMonth: 'nextMonth',
@@ -102,7 +102,7 @@ export default {
     for (let i = 0; i < num; i++) {
       const nowTime = year + '/' + month + '/' + (i + 1);
       arr.push({
-        id: i + 1,
+        dayNum: i + 1,
         date: nowTime,
         isToday: toDay === nowTime,
         otherMonth: 'nowMonth',
@@ -139,15 +139,36 @@ export default {
 
   // 获取某月的列表 用于渲染
   getMonthList(date) {
+    const year = date.getFullYear();
+    // 每月第一天
+    const firstDay = `${year}/${date.getMonth() + 1}/1`;
+    // 计算第一天是那一周
+    const week = this.getYearWeek(firstDay);
+    // 存储本月周列表,最多显示6周
+    const monthWeeks = [];
+    monthWeeks.push(week);
+    monthWeeks.push(week + 1);
+    monthWeeks.push(week + 2);
+    monthWeeks.push(week + 3);
+    monthWeeks.push(week + 4);
+    monthWeeks.push(week + 5);
+
     const days = [...this.getLeftArr(date), ...this.getMonthListNoOther(date), ...this.getRightArr(date)];
     const { length } = days;
     const weekDays = [];
-
+    let k = 0;
     for (let i = 0; i < length; i += 1) {
       if (i % 7 === 0) {
-        let weekNum = this.getYearWeek(days[i].date);
-        let w = Object.assign({}, days[i], { isWeek: true, weekNum: weekNum });
-        weekDays.push(w);
+        // let weekNum = this.getYearWeek(days[i].date);
+        // let w = Object.assign({}, days[i], { isWeek: true, weekNum: weekNum });
+        // weekDays.push(w);
+        // 那一年，第几周
+        weekDays.push({
+          year: year,
+          isWeek: true,
+          weekNum: monthWeeks[k],
+        });
+        k += 1;
       }
       days[i].isDay = true;
       weekDays.push(days[i]);
