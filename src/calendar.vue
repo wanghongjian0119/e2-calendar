@@ -113,9 +113,11 @@
 <script>
 /* eslint-disable */
 // 按需加载
-import Select from 'ant-design-vue/lib/select';
+import ASelect from 'ant-design-vue/lib/select';
 import 'ant-design-vue/lib/select/style/css';
 import timeUtil from './calendar';
+// 下拉框 option
+const ASelectOption = ASelect.Option;
 
 export default {
   data() {
@@ -131,8 +133,8 @@ export default {
     };
   },
   components: {
-    ASelect: Select,
-    ASelectOption: Select.Option
+    ASelect,
+    ASelectOption
   },
   props: {
     columnheader: {
@@ -162,7 +164,8 @@ export default {
   computed: {
     // 日历行
     rows() {
-      let len = this.list.length / 8;
+      const cols = this.cols.length;
+      let len = this.list.length / cols;
       let arr = [];
       for (let i = 0; i < len; i += 1) {
         arr.push(i);
@@ -211,7 +214,8 @@ export default {
     // 检索某行某列单元格日期
     curNode(row, col) {
       // 数字8 是 cols.length
-      const i = row * 8 + col - 1;
+      const cols = this.cols.length;
+      const i = row * cols + col - 1;
       if (this.list.length > 0) {
         return this.list[i];
       }
@@ -368,6 +372,7 @@ export default {
   padding-bottom: 5px;
   &:first-child {
     text-align: center;
+    width: 9%;
   }
 }
 
