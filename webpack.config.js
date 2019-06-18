@@ -91,4 +91,6 @@ if (process.env.NODE_ENV === 'production') {
       minimize: true
     })
   ])
+  // 不打包 ant-design-vue/lib/select，项目中单独引用
+  // module.exports.externals = { 'ant-design-vue/lib/select': 'ant-design-vue/lib/select' };
 }

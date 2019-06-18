@@ -112,7 +112,8 @@
 </template>
 <script>
 /* eslint-disable */
-import { Icon, Select } from 'ant-design-vue';
+// 按需加载
+import Select from 'ant-design-vue/lib/select';
 import 'ant-design-vue/lib/select/style/css';
 import timeUtil from './calendar';
 
@@ -130,7 +131,6 @@ export default {
     };
   },
   components: {
-    AIcon: Icon,
     ASelect: Select,
     ASelectOption: Select.Option
   },

@@ -3,8 +3,14 @@
 > 日历
 
 <div style="text-align:center">
-  <img src="preview.png" alt="calendar" title="calendar"/>
+  <img src="./preview.png" alt="calendar" title="calendar"/>
 </div>
+
+> 安装
+
+```bash
+$npm install e2-calendar
+```
 
 ### Development Setup
 

@@ -15,7 +15,6 @@
 </template>
 <script>
 import Calendar from '../src';
-import { returnStatement } from 'babel-types';
 
 export default {
   name: 'App',
