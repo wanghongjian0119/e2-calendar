@@ -1,6 +1,6 @@
 {
   "name": "e2-calendar",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "日历",
   "main": "dist/e2-calendar.min.js",
   "author": {
