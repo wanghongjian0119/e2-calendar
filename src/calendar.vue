@@ -6,27 +6,19 @@
       <div class="calendar-header-ext">
         <slot name="headerExt" />
       </div>
-      <a-select
-        :value="curYear"
+      <a-select :value="curYear"
         @change="handleChangeYear"
-        class="calendar-year-select"
-      >
-        <a-select-option
-          v-for="(value,index) in yearOptions"
+        class="calendar-year-select">
+        <a-select-option v-for="(value,index) in yearOptions"
           :key="index"
-          :value="value"
-        >{{value}}年</a-select-option>
+          :value="value">{{value}}年</a-select-option>
       </a-select>
-      <a-select
-        :value="curMonth"
+      <a-select :value="curMonth"
         @change="handleChangeMonth"
-        class="calendar-month-select"
-      >
-        <a-select-option
-          v-for="(value,index) in monthOptions"
+        class="calendar-month-select">
+        <a-select-option v-for="(value,index) in monthOptions"
           :key="index"
-          :value="value"
-        >{{value}}月</a-select-option>
+          :value="value">{{value}}月</a-select-option>
       </a-select>
     </div>
     <!-- end: 日历头部 -->
@@ -52,28 +44,22 @@
     <table class="calendar-table">
       <thead>
         <tr>
-          <th
-            v-for="(tag,index) in columnheader"
+          <th v-for="(tag,index) in columnheader"
             :key="index"
-            class="calendar-column-header"
-          ><span class="calendar-column-header-inner">{{tag}}</span></th>
+            class="calendar-column-header">
+            <span class="calendar-column-header-inner">{{tag}}</span>
+          </th>
         </tr>
       </thead>
       <tbody class="calendar-tbody">
-        <tr
-          v-for="(row,rx) in rows"
-          :key="rx"
-        >
-          <td
-            v-for="(col,cx) in cols"
+        <tr v-for="(row,rx) in rows"
+          :key="rx">
+          <td v-for="(col,cx) in cols"
             :key="cx"
             :class="cellClassName(row,col)"
-            :title="cellTitle(row,col)"
-          >
-            <div
-              class="calendar-date"
-              @click="clickDay(curNode(row,col))"
-            >
+            :title="cellTitle(row,col)">
+            <div class="calendar-date"
+              @click="clickDay(curNode(row,col))">
               <!-- being: 日期数据 -->
               <div class="calendar-value">
                 <template v-if="curNode(row,col).isWeek">
@@ -85,21 +71,15 @@
               </div>
               <!-- end: 日期数据 -->
               <!-- being: 额外数据 -->
-              <div
-                class="calendar-content"
-                :style="{height:cellHeight}"
-              >
+              <div class="calendar-content"
+                :style="{height:cellHeight}">
                 <!-- 插槽: 周单元格和日单元格，并且对外提供当前节点 -->
-                <slot
-                  v-if="curNode(row,col).isWeek"
+                <slot v-if="curNode(row,col).isWeek"
                   name="week"
-                  v-bind="curNode(row,col)"
-                />
-                <slot
-                  v-else
+                  v-bind="curNode(row,col)" />
+                <slot v-else
                   name="day"
-                  v-bind="curNode(row,col)"
-                />
+                  v-bind="curNode(row,col)" />
               </div>
               <!-- end: 额外数据 -->
             </div>
@@ -111,13 +91,10 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
-// 按需加载
-import ASelect from 'ant-design-vue/lib/select';
-import 'ant-design-vue/lib/select/style/css';
+import { Select } from 'ant-design-vue';
 import timeUtil from './calendar';
 // 下拉框 option
-const ASelectOption = ASelect.Option;
+const SelectOption = Select.Option;
 
 export default {
   data() {
@@ -126,40 +103,40 @@ export default {
       myDate: [],
       list: [],
       monthOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      yearOptions: [], //月下拉框
+      yearOptions: [], // 月下拉框
       dateTop: '',
       curYear: 0, // 下拉框选择的年
-      curMonth: 0 // 下拉框选择的月
+      curMonth: 0, // 下拉框选择的月
     };
   },
   components: {
-    ASelect,
-    ASelectOption
+    [Select.name]: Select,
+    [SelectOption.name]: SelectOption,
   },
   props: {
     columnheader: {
       type: Array,
-      default: () => ['周数', '一', '二', '三', '四', '五', '六', '日']
+      default: () => ['周数', '一', '二', '三', '四', '五', '六', '日'],
     },
     sundayStart: {
       type: Boolean,
-      default: () => false
+      default: () => false,
     },
     cellHeight: {
       type: String,
-      default: '44px'
+      default: '44px',
     },
     defaultDate: {
       type: String,
-      default: ''
+      default: '',
     },
     // 格式化周显示格式
     formatWeek: {
       type: Function,
       default: weekNum => {
         return `第${weekNum}周`;
-      }
-    }
+      },
+    },
   },
   computed: {
     // 日历行
@@ -171,7 +148,7 @@ export default {
         arr.push(i);
       }
       return arr;
-    }
+    },
   },
   created() {
     this.intStart();
@@ -269,9 +246,7 @@ export default {
         this.getList(this.myDate, item.date);
       }
       if (item.otherMonth !== 'nowMonth') {
-        item.otherMonth === 'preMonth'
-          ? this.PreMonth(item.date)
-          : this.NextMonth(item.date);
+        item.otherMonth === 'preMonth' ? this.PreMonth(item.date) : this.NextMonth(item.date);
       }
     },
     ChoseMonth: function(date, isChosedDay = true) {
@@ -321,7 +296,7 @@ export default {
         }
       }
       this.list = arr;
-    }
+    },
   },
   mounted() {
     if (this.defaultDate) {
@@ -336,9 +311,9 @@ export default {
         this.intStart();
         this.getList(this.myDate);
       },
-      deep: true
-    }
-  }
+      deep: true,
+    },
+  },
 };
 </script>
 

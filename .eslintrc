@@ -1,4 +1,9 @@
 {
   "extends": "standard",
-  "plugins": [ "html" ]
+  "plugins": ["html"],
+  "rules": {
+    "semi": "off",
+    "comma-dangle": "off",
+    "space-before-function-paren": "off"
+  }
 }

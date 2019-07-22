@@ -1,5 +1,5 @@
-const path = require('path')
-const webpack = require('webpack')
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './docs/main.js',
@@ -62,19 +62,19 @@ module.exports = {
     hints: false
   },
   devtool: '#eval-source-map'
-}
+};
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.entry = './src/index.js'
+  module.exports.entry = './src/index.js';
 
   module.exports.output = {
     path: path.resolve(__dirname, './dist'),
     publicPath: 'dist/',
     filename: 'e2-calendar.min.js',
     libraryTarget: 'umd'
-  }
+  };
 
-  module.exports.devtool = '#source-map'
+  module.exports.devtool = '#source-map';
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
@@ -90,7 +90,13 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })
-  ])
+  ]);
+
+  if (process.env.NODE_ENV === 'production') {
+    module.exports.externals = {
+      'ant-design-vue': 'ant-design-vue'
+    };
+  }
   // 不打包 ant-design-vue/lib/select，项目中单独引用
   // module.exports.externals = { 'ant-design-vue/lib/select': 'ant-design-vue/lib/select' };
 }
