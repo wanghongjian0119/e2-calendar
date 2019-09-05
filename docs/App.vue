@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <Calendar defaultDate="2019-05-06">
+    <e2-calendar defaultDate="2019-05-06">
       <template #headerExt>
         计划日期：2019-08-08~2019-12-08
       </template>
@@ -10,15 +10,15 @@
       <template #day="date">
         <div class="demo-day"> 12<em>.</em></div>
       </template>
-    </Calendar>
+    </e2-calendar>
   </div>
 </template>
 <script>
-import Calendar from '../src';
+import E2Calendar from '../src';
 
 export default {
   name: 'App',
-  components: { Calendar },
+  components: { E2Calendar },
 
   data() {
     return {};

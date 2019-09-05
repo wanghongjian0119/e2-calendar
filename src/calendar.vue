@@ -97,6 +97,7 @@ import timeUtil from './calendar';
 const SelectOption = Select.Option;
 
 export default {
+  name: 'e2-calendar',
   data() {
     return {
       cols: [1, 2, 3, 4, 5, 6, 7, 8], // 日历列

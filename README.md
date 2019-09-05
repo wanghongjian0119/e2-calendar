@@ -69,7 +69,7 @@ $ npm run build
 ### demo
 
 ```html
-<Calendar defaultDate="2019-05-06">
+<e2-calendar defaultDate="2019-05-06">
   <template #headerExt>
     计划日期：2019-08-08~2019-12-08
   </template>
@@ -79,5 +79,5 @@ $ npm run build
   <template #day="date">
     <div class="demo-day">12<em>.</em></div>
   </template>
-</Calendar>
+</e2-calendar>
 ```
