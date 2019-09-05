@@ -3,7 +3,7 @@
 > 日历
 
 <div style="text-align:center">
-  <img src="./preview.png" alt="calendar" title="calendar"/>
+  <img src="https://user-images.githubusercontent.com/6220088/64321952-29b1d180-cff4-11e9-931a-cb57e12e3015.png" alt="calendar" title="calendar"/>
 </div>
 
 > 安装
